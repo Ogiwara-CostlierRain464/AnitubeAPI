@@ -1,17 +1,15 @@
 package jp.ogiwara.anitube.method
 
+import jp.ogiwara.anitube.Anitube
+import jp.ogiwara.anitube.http.getBody
+import jp.ogiwara.anitube.makeVideo
 import jp.ogiwara.anitube.model.Video
 
+const val HIGHLIGHT = "fragment-1"
+const val TOP_RATED = "fragment-2"
+const val MOST_SEEN = "fragment-3"
 
-internal class GetTopVideosMethod(val fragment: String){
+internal expect class GetTopVideosMethod(fragment: String){
 
-    companion object {
-        val HIGHLIGHT = "fragment-1"
-        val TOP_RATED = "fragment-2"
-        val MOST_SEEN = "fragment-3"
-    }
-
-    fun execute(): List<Video>{
-        TODO()
-    }
+    fun execute(): List<Video>
 }

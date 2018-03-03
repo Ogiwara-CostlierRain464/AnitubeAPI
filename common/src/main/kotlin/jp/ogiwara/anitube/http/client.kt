@@ -1,5 +1,4 @@
 package jp.ogiwara.anitube.http
 
-import jp.ogiwara.anitube.model.Document
-
-expect fun getBody(): Document
+//指定したurlの内容を返す
+expect fun getBody(url: String): String?

@@ -17,6 +17,7 @@ subprojects {
     repositories {
         maven {     url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -31,8 +32,6 @@ configure(project(":common")){
         compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
         testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
         testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
-
-        compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3'
     }
 }
 
@@ -48,11 +47,18 @@ configure(project(':jvm')) {
         testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
         testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
         expectedBy project(':common')
+
+        compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3'
+
+        compile 'com.google.http-client:google-http-client:1.19.0'
+
+        compile 'org.jsoup:jsoup:1.7.3'
     }
 }
 
 configure(project(':js')) {
     apply plugin: 'kotlin-platform-js'
+    apply plugin: 'kotlin2js'
 
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
@@ -60,5 +66,38 @@ configure(project(':js')) {
         expectedBy project(':common')
 
         compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.22.3'
+
     }
+
+    build.doLast() {
+        configurations.compile.each { File file ->
+            copy {
+                includeEmptyDirs = false
+
+                from zipTree(file.absolutePath)
+                into 'build/classes/main'
+                include '**/*.js'
+                eachFile { details ->
+                    def names = details.path.split('/')
+                    details.path = names.getAt(names.length - 1)
+                }
+            }
+        }
+    }
+
+    /*compileKotlin2Js {
+        kotlinOptions.metaInfo = true
+        kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
+        kotlinOptions.sourceMap = true
+        kotlinOptions.moduleKind = 'commonjs'
+        kotlinOptions.main = "call"
+    }
+
+    compileTestKotlin2Js {
+        kotlinOptions.metaInfo = true
+        kotlinOptions.outputFile = "$project.buildDir.path/js-tests/${project.name}-tests.js"
+        kotlinOptions.sourceMap = true
+        kotlinOptions.moduleKind = 'commonjs'
+        kotlinOptions.main = "call"
+    }*/
 }
