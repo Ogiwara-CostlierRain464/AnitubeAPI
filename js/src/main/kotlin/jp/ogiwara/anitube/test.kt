@@ -10,10 +10,30 @@ import org.w3c.xhr.XMLHttpRequest
 
 fun main(args: Array<String>){
 
+    /**
+     * ご覧の通り、適切なURIエンコーディングが必要です
+     */
+
     t(0,"searchTest",{
-        Anitube.search("Kill Me Baby").forEach(::println)
+        println(Anitube.search("kill me baby").first().getMp4Url(false))
+        //println(getBody("http://www.anitube.se/search/?search_id=kill+me+baby".toEscapeUrl()))
 
         ok(true,"success")
+    })
+
+    t(0,"escape test",{
+        println((Anitube.Url.SEARCH + "kill me baby").replace(" ","+").toEscapeUrl())
+
+        println("http://www.anitube.se/search/?search_id=kill+me+baby".toEscapeUrl())
+
+        ok(true, "ecbewc")
+    })
+
+    t(0,"escape test",{
+
+        println("&'`\"<>".toEscapeHtml())
+
+        ok(true,"frv")
     })
 
     t(0,"toDOM",{
@@ -72,8 +92,8 @@ fun main(args: Array<String>){
         ok(true,"sc")
     })
 
-    t(1,"video url test",{
-        println(Anitube.mostSeen.first().getMp4Url())
+    t(0,"video url test",{
+        println(Anitube.mostSeen.first().getMp4Url(false))
 
         ok(true,"cfs")
     })

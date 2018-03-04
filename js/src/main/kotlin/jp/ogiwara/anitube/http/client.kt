@@ -1,5 +1,6 @@
 package jp.ogiwara.anitube.http
 
+import jp.ogiwara.anitube.toEscapeUrl
 import org.w3c.xhr.XMLHttpRequest
 
 const val MY_PROXY = "http://ogiwara.ddo.jp:4040/proxy?url="

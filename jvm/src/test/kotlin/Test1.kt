@@ -1,4 +1,5 @@
 import jp.ogiwara.anitube.Anitube
+import jp.ogiwara.anitube.http.getBody
 import org.junit.Ignore
 import org.junit.Test
 
@@ -10,8 +11,14 @@ class Test1 {
         assert(true)
     }
 
-    @Test
+    @Ignore
     fun getTopTest(){
-        println(Anitube.mostSeen.first().getMp4Url())
+        println(Anitube.mostSeen.first().getMp4Url(false))
+    }
+
+    @Test
+    fun searchBody(){
+        println(getBody(Anitube.Url.SEARCH + "kill me baby"))
+        assert(true)
     }
 }

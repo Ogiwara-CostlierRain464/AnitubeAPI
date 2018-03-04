@@ -27,3 +27,21 @@ fun String.toDOM(): Document{
     val parser = DOMParser()
     return parser.parseFromString(this, "text/html")
 }
+
+fun String.toEscapeHtml(): String{
+    return this.replace("[&'`\"<>]".toRegex(),{
+        when(it.value){
+            "&" -> "&amp;"
+            "'" -> "&#x27;"
+            "`" -> "&#x60;"
+            "\"" -> "&quot;"
+            "<" -> "&lt;"
+            ">" -> "&gt;"
+            else -> it.value
+        }
+    })
+}
+
+external fun encodeURIComponent(str: String): String
+
+fun String.toEscapeUrl(): String = encodeURIComponent(this)

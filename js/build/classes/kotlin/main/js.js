@@ -5,16 +5,16 @@ var js = function (_, Kotlin) {
   'use strict';
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
   var ensureNotNull = Kotlin.ensureNotNull;
-  var removeSurrounding = Kotlin.kotlin.text.removeSurrounding_90ijwr$;
-  var first = Kotlin.kotlin.sequences.first_veqyi0$;
-  var Kind_CLASS = Kotlin.Kind.CLASS;
   var replace = Kotlin.kotlin.text.replace_680rmw$;
   var NullPointerException = Kotlin.kotlin.NullPointerException;
   var emptyList = Kotlin.kotlin.collections.emptyList_287e2$;
   var asList = Kotlin.org.w3c.dom.asList_kt9thq$;
+  var Kind_CLASS = Kotlin.Kind.CLASS;
+  var removeSurrounding = Kotlin.kotlin.text.removeSurrounding_90ijwr$;
+  var first = Kotlin.kotlin.sequences.first_veqyi0$;
+  var first_0 = Kotlin.kotlin.collections.first_2p1efm$;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
   var Unit = Kotlin.kotlin.Unit;
-  var first_0 = Kotlin.kotlin.collections.first_2p1efm$;
   function Anitube() {
     Anitube_instance = this;
   }
@@ -71,53 +71,6 @@ var js = function (_, Kotlin) {
   var KEY;
   var HD;
   var SD;
-  function Video(title, views, imgUrl, videoUrl) {
-    this.title = title;
-    this.views = views;
-    this.imgUrl = imgUrl;
-    this.videoUrl = videoUrl;
-  }
-  var Regex_init = Kotlin.kotlin.text.Regex_init_61zpoe$;
-  Video.prototype.getMp4Url_6taknv$ = function (quality) {
-    if (quality === void 0)
-      quality = false;
-    var html = getBody(getKeyUrl(this));
-    return first(Regex_init(quality ? HD : SD).findAll_905azu$(removeSurrounding(ensureNotNull(html), 'sources: [{', '}],'))).value;
-  };
-  Video.$metadata$ = {
-    kind: Kind_CLASS,
-    simpleName: 'Video',
-    interfaces: []
-  };
-  Video.prototype.component1 = function () {
-    return this.title;
-  };
-  Video.prototype.component2 = function () {
-    return this.views;
-  };
-  Video.prototype.component3 = function () {
-    return this.imgUrl;
-  };
-  Video.prototype.component4 = function () {
-    return this.videoUrl;
-  };
-  Video.prototype.copy_w74nik$ = function (title, views, imgUrl, videoUrl) {
-    return new Video(title === void 0 ? this.title : title, views === void 0 ? this.views : views, imgUrl === void 0 ? this.imgUrl : imgUrl, videoUrl === void 0 ? this.videoUrl : videoUrl);
-  };
-  Video.prototype.toString = function () {
-    return 'Video(title=' + Kotlin.toString(this.title) + (', views=' + Kotlin.toString(this.views)) + (', imgUrl=' + Kotlin.toString(this.imgUrl)) + (', videoUrl=' + Kotlin.toString(this.videoUrl)) + ')';
-  };
-  Video.prototype.hashCode = function () {
-    var result = 0;
-    result = result * 31 + Kotlin.hashCode(this.title) | 0;
-    result = result * 31 + Kotlin.hashCode(this.views) | 0;
-    result = result * 31 + Kotlin.hashCode(this.imgUrl) | 0;
-    result = result * 31 + Kotlin.hashCode(this.videoUrl) | 0;
-    return result;
-  };
-  Video.prototype.equals = function (other) {
-    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.title, other.title) && Kotlin.equals(this.views, other.views) && Kotlin.equals(this.imgUrl, other.imgUrl) && Kotlin.equals(this.videoUrl, other.videoUrl)))));
-  };
   function makeVideo(dom) {
     var tmp$;
     var div = toDOM(dom);
@@ -141,6 +94,66 @@ var js = function (_, Kotlin) {
   function toDOM($receiver) {
     var parser = new DOMParser();
     return parser.parseFromString($receiver, 'text/html');
+  }
+  var Regex_init = Kotlin.kotlin.text.Regex_init_61zpoe$;
+  var StringBuilder_init = Kotlin.kotlin.text.StringBuilder_init_za3lpa$;
+  function toEscapeHtml($receiver) {
+    var regex = Regex_init('[&\'`"<>]');
+    var replace_20wsma$result;
+    replace_20wsma$break: do {
+      var match = regex.find_905azu$($receiver);
+      if (match == null) {
+        replace_20wsma$result = $receiver.toString();
+        break replace_20wsma$break;
+      }
+      var lastStart = 0;
+      var length = $receiver.length;
+      var sb = StringBuilder_init(length);
+      do {
+        var foundMatch = ensureNotNull(match);
+        sb.append_ezbsdh$($receiver, lastStart, foundMatch.range.start);
+        var tmp$ = sb.append_gw00v9$;
+        var transform$result;
+        transform$break: do {
+          switch (foundMatch.value) {
+            case '&':
+              transform$result = '&amp;';
+              break transform$break;
+            case "'":
+              transform$result = '&#x27;';
+              break transform$break;
+            case '`':
+              transform$result = '&#x60;';
+              break transform$break;
+            case '"':
+              transform$result = '&quot;';
+              break transform$break;
+            case '<':
+              transform$result = '&lt;';
+              break transform$break;
+            case '>':
+              transform$result = '&gt;';
+              break transform$break;
+            default:transform$result = foundMatch.value;
+              break transform$break;
+          }
+        }
+         while (false);
+        tmp$.call(sb, transform$result);
+        lastStart = foundMatch.range.endInclusive + 1 | 0;
+        match = foundMatch.next();
+      }
+       while (lastStart < length && match != null);
+      if (lastStart < length) {
+        sb.append_ezbsdh$($receiver, lastStart, length);
+      }
+      replace_20wsma$result = sb.toString();
+    }
+     while (false);
+    return replace_20wsma$result;
+  }
+  function toEscapeUrl($receiver) {
+    return encodeURIComponent($receiver);
   }
   var MY_PROXY;
   function getBody(url) {
@@ -207,7 +220,7 @@ var js = function (_, Kotlin) {
   });
   SearchMethod.prototype.execute = function () {
     var tmp$, tmp$_0;
-    tmp$_0 = (tmp$ = getBody(Anitube$Url_getInstance().SEARCH + this.keyWord)) != null ? toDOM(tmp$) : null;
+    tmp$_0 = (tmp$ = getBody(toEscapeUrl(replace(replace(Anitube$Url_getInstance().SEARCH + this.keyWord, ' ', '+'), '\u3000', '')))) != null ? toDOM(tmp$) : null;
     if (tmp$_0 == null) {
       return emptyList();
     }
@@ -230,33 +243,83 @@ var js = function (_, Kotlin) {
     simpleName: 'SearchMethod',
     interfaces: []
   };
-  function getKeyUrl($receiver) {
-    var document = getBody($receiver.videoUrl);
+  function Video(title, views, imgUrl, videoUrl) {
+    this.title = title;
+    this.views = views;
+    this.imgUrl = imgUrl;
+    this.videoUrl = videoUrl;
+  }
+  Video.prototype.getMp4Url_6taknv$ = function (quality) {
+    var html = getBody(this.getKeyUrl());
+    return first(Regex_init(quality ? HD : SD).findAll_905azu$(removeSurrounding(ensureNotNull(html), 'sources: [{', '}],'))).value;
+  };
+  Video.prototype.getKeyUrl = function () {
+    var document = getBody(this.videoUrl);
     var videoPlayer = toDOM(ensureNotNull(document)).getElementById('videoPlayer');
     var code = ensureNotNull(videoPlayer).innerHTML;
     return first(Regex_init(KEY).findAll_905azu$(code)).value;
-  }
+  };
+  Video.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Video',
+    interfaces: []
+  };
+  Video.prototype.component1 = function () {
+    return this.title;
+  };
+  Video.prototype.component2 = function () {
+    return this.views;
+  };
+  Video.prototype.component3 = function () {
+    return this.imgUrl;
+  };
+  Video.prototype.component4 = function () {
+    return this.videoUrl;
+  };
+  Video.prototype.copy_w74nik$ = function (title, views, imgUrl, videoUrl) {
+    return new Video(title === void 0 ? this.title : title, views === void 0 ? this.views : views, imgUrl === void 0 ? this.imgUrl : imgUrl, videoUrl === void 0 ? this.videoUrl : videoUrl);
+  };
+  Video.prototype.toString = function () {
+    return 'Video(title=' + Kotlin.toString(this.title) + (', views=' + Kotlin.toString(this.views)) + (', imgUrl=' + Kotlin.toString(this.imgUrl)) + (', videoUrl=' + Kotlin.toString(this.videoUrl)) + ')';
+  };
+  Video.prototype.hashCode = function () {
+    var result = 0;
+    result = result * 31 + Kotlin.hashCode(this.title) | 0;
+    result = result * 31 + Kotlin.hashCode(this.views) | 0;
+    result = result * 31 + Kotlin.hashCode(this.imgUrl) | 0;
+    result = result * 31 + Kotlin.hashCode(this.videoUrl) | 0;
+    return result;
+  };
+  Video.prototype.equals = function (other) {
+    return this === other || (other !== null && (typeof other === 'object' && (Object.getPrototypeOf(this) === Object.getPrototypeOf(other) && (Kotlin.equals(this.title, other.title) && Kotlin.equals(this.views, other.views) && Kotlin.equals(this.imgUrl, other.imgUrl) && Kotlin.equals(this.videoUrl, other.videoUrl)))));
+  };
   function main$lambda() {
-    var tmp$;
-    tmp$ = Anitube_getInstance().search_61zpoe$('Kill Me Baby').iterator();
-    while (tmp$.hasNext()) {
-      var element = tmp$.next();
-      println(element);
-    }
+    println(first_0(Anitube_getInstance().search_61zpoe$('kill me baby')).getMp4Url_6taknv$(false));
     ok(true, 'success');
     return Unit;
   }
   function main$lambda_0() {
+    println(toEscapeUrl(replace(Anitube$Url_getInstance().SEARCH + 'kill me baby', ' ', '+')));
+    println(toEscapeUrl('http://www.anitube.se/search/?search_id=kill+me+baby'));
+    ok(true, 'ecbewc');
+    return Unit;
+  }
+  function main$lambda_1() {
+    println(toEscapeHtml('&\'`"<>'));
+    ok(true, 'frv');
+    return Unit;
+  }
+  function main$lambda_2() {
     println(ensureNotNull(ensureNotNull(toDOM(ensureNotNull(getBody(Anitube$Url_getInstance().SEARCH + 'kill me baby'))).getElementsByClassName('mainBox')[0]).getElementsByClassName('mainList')[0]).innerHTML);
     ok(true, 'sc');
     return Unit;
   }
-  function main$lambda_1() {
+  function main$lambda_3() {
     println(getBody(Anitube$Url_getInstance().SEARCH + 'kill me baby'));
     ok(true, 'efewv');
     return Unit;
   }
-  function main$lambda_2() {
+  function main$lambda_4() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', MY_PROXY + Anitube$Url_getInstance().SEARCH + 'kill me baby', false);
     xhr.send();
@@ -264,7 +327,7 @@ var js = function (_, Kotlin) {
     ok(true, 'vre');
     return Unit;
   }
-  function main$lambda_3() {
+  function main$lambda_5() {
     var div = toDOM(sample);
     var thumb = div.getElementsByClassName('videoThumb')[0];
     var videoUrl = ensureNotNull(ensureNotNull(ensureNotNull(thumb).getElementsByTagName('a')[0]).getAttribute('href'));
@@ -279,24 +342,26 @@ var js = function (_, Kotlin) {
     ok(true, 'sc');
     return Unit;
   }
-  function main$lambda_4() {
+  function main$lambda_6() {
     println(first_0(Anitube_getInstance().mostSeen));
     ok(true, 'sc');
     return Unit;
   }
-  function main$lambda_5() {
-    println(first_0(Anitube_getInstance().mostSeen).getMp4Url_6taknv$());
+  function main$lambda_7() {
+    println(first_0(Anitube_getInstance().mostSeen).getMp4Url_6taknv$(false));
     ok(true, 'cfs');
     return Unit;
   }
   function main(args) {
     t(0, 'searchTest', main$lambda);
-    t(0, 'toDOM', main$lambda_0);
-    t(0, 'DOM Check', main$lambda_1);
-    t(0, 'getBody Check', main$lambda_2);
-    t(0, 'makeVideo Test', main$lambda_3);
-    t(0, 'get top test', main$lambda_4);
-    t(1, 'video url test', main$lambda_5);
+    t(0, 'escape test', main$lambda_0);
+    t(0, 'escape test', main$lambda_1);
+    t(0, 'toDOM', main$lambda_2);
+    t(0, 'DOM Check', main$lambda_3);
+    t(0, 'getBody Check', main$lambda_4);
+    t(0, 'makeVideo Test', main$lambda_5);
+    t(0, 'get top test', main$lambda_6);
+    t(0, 'video url test', main$lambda_7);
   }
   function t(i, testName, fun) {
     if (i === 1) {
@@ -345,9 +410,10 @@ var js = function (_, Kotlin) {
       return SD;
     }
   });
-  package$model.Video = Video;
   package$anitube.makeVideo_61zpoe$ = makeVideo;
   package$anitube.toDOM_pdl1vz$ = toDOM;
+  package$anitube.toEscapeHtml_pdl1vz$ = toEscapeHtml;
+  package$anitube.toEscapeUrl_pdl1vz$ = toEscapeUrl;
   var package$http = package$anitube.http || (package$anitube.http = {});
   Object.defineProperty(package$http, 'MY_PROXY', {
     get: function () {
@@ -357,7 +423,7 @@ var js = function (_, Kotlin) {
   package$http.getBody_61zpoe$ = getBody;
   package$method.GetTopVideosMethod = GetTopVideosMethod;
   package$method.SearchMethod = SearchMethod;
-  package$model.getKeyUrl_jkx4oj$ = getKeyUrl;
+  package$model.Video = Video;
   package$anitube.main_kand9s$ = main;
   package$anitube.t_jl06c7$ = t;
   Object.defineProperty(package$anitube, 'sample', {
